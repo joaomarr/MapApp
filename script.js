@@ -65,6 +65,7 @@ class App {
   #mapZoomLevel = 14;
   #mapEvent;
   #workouts = [];
+  #workoutsCount = 0;
 
   constructor() {
     this._getPosition();
@@ -129,6 +130,7 @@ class App {
     e.preventDefault();
 
     let workout;
+    this.#workoutsCount++;
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
@@ -191,7 +193,8 @@ class App {
   _renderWorkout(workout) {
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
-      <h2 class="workout__title">${workout.description}</h2>
+        <h2 class="workout__title">${workout.description}</h2>
+        <a class="workout__close__btn" id="${this.#workoutsCount}" href="">X</a>
       <div class="workout__details">
         <span class="workout__icon">${
           workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
@@ -236,6 +239,21 @@ class App {
     }
 
     form.insertAdjacentHTML('afterend', html);
+    document
+      .getElementById(`${this.#workoutsCount}`)
+      .addEventListener('click', this._excludeWorkout);
+  }
+
+  _excludeWorkout(e) {
+    e.preventDefault();
+    const id = e.id - 2;
+    const workout = e.target.closest('li');
+    workout.style.display = 'none';
+    workout.classList.add('hidden');
+    const key = localStorage.getItem('workouts');
+    const objKey = JSON.parse(key);
+    objKey.splice(0);
+    console.log(objKey);
   }
 
   _moveToPopup(e) {
