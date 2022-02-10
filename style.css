@@ -218,3 +218,18 @@ a:visited {
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
 }
+
+.workout__close__btn {
+  grid-area: 1/4;
+  margin-left: 6.5rem;
+  padding: 4px 4px 0 0;
+  border: none;
+  text-align: center;
+  width: 18px;
+  height: 14px;
+  font: 16px/14px Tahoma, Verdana, sans-serif;
+  color: var(--color-brand--1);
+  text-decoration: none;
+  font-weight: bold;
+  background: transparent;
+}
