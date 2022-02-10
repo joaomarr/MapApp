@@ -195,7 +195,9 @@ class App {
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
         <h2 class="workout__title">${workout.description}</h2>
-        <a class="workout__close__btn" id="${this.#workoutsCount}" href="">X</a>
+        <a class="workout__close__btn ${
+          workout.type === 'running' ? 'btn__running' : 'btn__cycling'
+        }" id="${this.#workoutsCount}" href="">X</a>
       <div class="workout__details">
         <span class="workout__icon">${
           workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
@@ -259,6 +261,7 @@ class App {
     const newdata = data.filter(newObj);
     localStorage.removeItem('workouts');
     localStorage.setItem('workouts', JSON.stringify(newdata));
+    location.reload();
   }
 
   _moveToPopup(e) {
