@@ -191,6 +191,7 @@ class App {
   }
 
   _renderWorkout(workout) {
+    this.#workoutsCount++;
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
         <h2 class="workout__title">${workout.description}</h2>
@@ -246,14 +247,18 @@ class App {
 
   _excludeWorkout(e) {
     e.preventDefault();
-    const id = e.id - 2;
     const workout = e.target.closest('li');
+    const id = workout.dataset.id;
     workout.style.display = 'none';
     workout.classList.add('hidden');
-    const key = localStorage.getItem('workouts');
-    const objKey = JSON.parse(key);
-    objKey.splice(0);
-    console.log(objKey);
+    const data = JSON.parse(localStorage.getItem('workouts'));
+    function newObj(data) {
+      if (data.id === id) return false;
+      else return true;
+    }
+    const newdata = data.filter(newObj);
+    localStorage.removeItem('workouts');
+    localStorage.setItem('workouts', JSON.stringify(newdata));
   }
 
   _moveToPopup(e) {
