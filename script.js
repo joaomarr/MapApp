@@ -65,7 +65,6 @@ class App {
   #mapZoomLevel = 14;
   #mapEvent;
   #workouts = [];
-  #workoutsCount = 0;
 
   constructor() {
     this._getPosition();
@@ -130,7 +129,6 @@ class App {
     e.preventDefault();
 
     let workout;
-    this.#workoutsCount++;
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
@@ -191,13 +189,15 @@ class App {
   }
 
   _renderWorkout(workout) {
-    this.#workoutsCount++;
     let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
         <h2 class="workout__title">${workout.description}</h2>
         <a class="workout__close__btn ${
           workout.type === 'running' ? 'btn__running' : 'btn__cycling'
-        }" id="${this.#workoutsCount}" href="">X</a>
+        }" href="">X</a>
+        <a class="workout__edit__btn ${
+          workout.type === 'running' ? 'btn__running' : 'btn__cycling'
+        }">Edit</a>
       <div class="workout__details">
         <span class="workout__icon">${
           workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'
@@ -242,9 +242,12 @@ class App {
     }
 
     form.insertAdjacentHTML('afterend', html);
-    document
-      .getElementById(`${this.#workoutsCount}`)
-      .addEventListener('click', this._excludeWorkout);
+    const closeBtns = document.querySelectorAll('.workout__close__btn');
+    const editBtns = document.querySelectorAll('.workout__edit__btn');
+    closeBtns.forEach(btn =>
+      btn.addEventListener('click', this._excludeWorkout)
+    );
+    editBtns.forEach(btn => btn.addEventListener('click', this._editWorkout));
   }
 
   _excludeWorkout(e) {
@@ -262,6 +265,13 @@ class App {
     localStorage.removeItem('workouts');
     localStorage.setItem('workouts', JSON.stringify(newdata));
     location.reload();
+  }
+
+  _editWorkout(e) {
+    e.preventDefault();
+    const workout = e.target.closest('li');
+    const button = e.target;
+    button.textContent = 'Save';
   }
 
   _moveToPopup(e) {
